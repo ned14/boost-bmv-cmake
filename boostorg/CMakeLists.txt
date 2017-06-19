@@ -22,6 +22,9 @@ add_subdirectory("libs/system")
 # Configure these to be named similarly to how Boost.Build generates staging
 foreach(project ${BOOST_LIBRARY_PROJECTS})
   foreach(target ${${project}_TARGETS})
+    # Disable auto-linking as I don't use identical naming below, and cmake takes care of auto linking anyway
+    target_compile_definitions(${target} INTERFACE BOOST_ALL_NO_LIB)
+    # If not a header only library ...
     if(NOT target MATCHES ".*-hl")
       set_target_properties(${target} PROPERTIES
         # Place the library into a "lib" or "bin" directory at the root of the build depending on its kind
