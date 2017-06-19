@@ -13,6 +13,8 @@ include("build/sources.cmake")
 
 # Create a header only library target
 add_library(boost_system-hl INTERFACE)
+# For some reason cmake wants you to specify sources to be injected into consumers
+# like this instead of placing them in add_library()
 target_sources(boost_system-hl INTERFACE ${${PROJECT_NAME}_HEADERS})
 # This path must be searched for header files during build and by anyone who links/consumes me
 target_include_directories(boost_system-hl INTERFACE ${${PROJECT_NAME}_HEADERS_PATH})
@@ -49,8 +51,10 @@ target_compile_features(boost_system-dl PUBLIC cxx_std_98)
 # Alias this to a more programmer friendly name
 add_library(boost::system::dl ALIAS boost_system-dl)
 
+# These are the targets I create
+set(${PROJECT_NAME}_TARGETS boost_system-hl boost_system-sl boost_system-dl PARENT_SCOPE)
 # Install these targets as follows
-install(TARGETS boost_system-hl boost_system-sl boost_system-dl EXPORT boost COMPONENT system
+install(TARGETS ${${PROJECT_NAME}_TARGETS} EXPORT boost COMPONENT system
         RUNTIME DESTINATION bin
         PUBLIC_HEADER DESTINATION include
         LIBRARY DESTINATION lib

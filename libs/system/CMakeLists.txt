@@ -9,10 +9,17 @@ if(NOT DEFINED BOOST_VERSION)
 endif()
 # project() cannot be outsourced to any other file, it must be located here
 project(boost_system VERSION ${BOOST_VERSION} LANGUAGES CXX)
+# Scripts consuming the CMakeLists.txt need to discover all the possible
+# projects. Variables available *may* be:
+# - ${PROJECT_NAME}_HEADERS: The header files
+# - ${PROJECT_NAME}_SOURCES: The source files
+# - ${PROJECT_NAME}_TARGETS: The library targets created in -hl, -sl, or -dl form
+set(BOOST_LIBRARY_PROJECTS ${BOOST_LIBRARY_PROJECTS} ${PROJECT_NAME} PARENT_SCOPE)
 
 # Include how to build the library
 # add_subdirectory(), although common, is the wrong thing to use here
 include("build/library.cmake")
+# Add the variable listing the targets I create to the global list
 
 # Indicate my dependencies
 if(NOT TARGET boost::assert::hl)
